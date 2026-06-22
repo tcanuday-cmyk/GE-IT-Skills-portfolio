@@ -1,0 +1,44 @@
+### Data Analytics & Visual Report
+
+#### Dataset Focus: Davao Region Eco-Tourism Index — Tourist Arrivals, Revenue & Site-Level Visitor Load (2018–2024)
+
+---
+
+#### 1. Data Cleaning Protocol Log
+
+| Problem Detected | Column(s) Affected | AI Cleaning Action Applied | Result |
+| :--- | :--- | :--- | :--- |
+| **Empty 2025 row** — no data recorded yet | All columns | Entire row dropped from analysis scope | Prevents false zeroes from distorting trend lines |
+| **NULL string in IGACOS_Visitors (2023)** — literal text "NULL" instead of blank | `IGACOS_Visitors` | Treated as NaN; filled via linear interpolation between 2022 (218,000) and 2024 (420,000) → estimated **319,000** | Continuity restored; flagged as interpolated in narrative |
+| **Missing Foreign_Arrivals (2021)** — note said "partial data" | `Foreign_Arrivals` | Linear interpolation between 2020 (8,500) and 2022 (45,000) → estimated **26,750** | Consistent with documented post-lockdown gradual reopening pattern |
+| **Missing MtApo_Trekkers (2021)** | `MtApo_Trekkers` | Linear interpolation between 2020 (1,200) and 2022 (8,900) → estimated **5,050** | Reflects partial trail reopening under PAMB phased protocols |
+| **Missing Avg_Length_of_Stay (2018)** | `Avg_Length_of_Stay_Days` | Replaced with column median (**3.05 days**) | Neutral imputation; no directional bias introduced |
+| **Stray annotation column** — "extra column" header with no data | `notes` (unnamed column) | Dropped entirely | Dataset width reduced from 9 to 7 analytical columns |
+| **Mixed revenue scale** — all values in PHP Millions; notes ambiguous | `Tourism_Revenue_PHP_Millions` | Confirmed uniform scale via cross-check against DOT-11 PNA report (₱34.7B = 34,700 in millions) ✅ | No conversion needed; scale label corrected in chart axis |
+
+**Cleaning Summary:** 7 structural corrections across 7 rows × 7 columns. 1 row dropped (2025). 4 null values imputed via linear interpolation. 1 stray column removed. Final clean dataset: **7 rows × 7 columns**, 100% populated.
+
+---
+
+#### 2. Visualizations Generated
+
+![Davao Region Eco-Tourism Trend Charts 2018–2024](davao_tourism_charts.png)
+
+*Fig. 1 — Chart 1 (top): Regional tourist arrivals split by domestic vs. foreign origin, overlaid with total tourism revenue in PHP Billions. Chart 2 (bottom): Site-level visitor load at IGACOS and Mt. Apo Natural Park, overlaid with count of operational resorts in Samal Island. COVID-19 disruption window (2020–2021) shaded in both panels.*
+
+---
+
+#### 3. Human Analytical Narrative — The 'Why' Factor
+
+**Chart 1 reading:** The data confirms Davao Region's tourism sector experienced a near-total collapse in 2020 — domestic arrivals fell from **2.1 million (2019) to 420,000**, and foreign arrivals from **95,000 to 8,500**. Revenue dropped from ₱22.5 billion to ₱4.1 billion. Recovery was not linear: 2021 showed only partial rebound before the sector surged in 2022–2024, reaching **4.1 million total arrivals and ₱34.7 billion** in revenue by 2024. What the AI summarizer did not flag — but human review of DOT-11 statements confirms — is that this recovery was **domestically led first**. Foreign arrivals only recovered meaningfully in 2023 (103,474) and accelerated sharply in 2024 (230,000). The AI's default framing of tourism recovery through a foreign-arrivals lens, as seen in the Literature Verification exercise, would have misread this chart entirely.
+
+**Chart 2 reading:** The IGACOS visitor dip in 2022 (218,000 — down from 345,000 pre-pandemic despite overall regional recovery) is not a market failure. Cross-referencing with Dalagan & Sy Jr. (2023) confirms this gap reflects a **deliberate resort reconstruction phase**: operators used pandemic closures to renovate facilities and reduce operating capacity before reopening. By 2024, IGACOS rebounded to a record **420,000 visitors** with 74 operational resorts — the highest count in the dataset. The Mt. Apo trekker line tells a structurally different story: **it has not recovered to its 2019 peak (15,200)** and likely never will — by institutional design. The PAMB 50-trekker-per-trail-per-day cap, confirmed in the Literature Review, deliberately suppresses volume to protect highland biodiversity. The 2022 dip to 8,900 marks the cap's full enforcement. This divergence — IGACOS recovering toward volume, Mt. Apo managed toward restraint — represents the **core tension in the Davao Region's eco-tourism policy architecture**: coastal mass tourism versus highland conservation-first governance.
+
+**Policy Implication for LGU Department Heads:** Budget allocation for tourism infrastructure should not treat IGACOS and MANP as equivalent destinations requiring equivalent development investment. IGACOS warrants investment in **carrying capacity expansion and marine waste management** to absorb volume growth sustainably. MANP requires investment in **ranger capacity, trail monitoring systems, and alternative livelihood programs** for surrounding communities — not expanded access infrastructure.
+
+---
+
+*Submitted by: Canuday, Trey Edison M. | Section 99-007*
+*Course Requirement — GE-IT Skills Portfolio*
+*Dataset: Mock regional dataset constructed from DOT-11 official figures (2018–2024)*
+*Cleaning Engine: Python 3 / pandas / matplotlib*
